@@ -237,9 +237,6 @@ def instruction_map():
     line = f.readline()
     while line!="":
         entry = line.split()
-        if entry[0] == "//": #comment
-            line = f.readline()
-            continue
         instr_map[entry[0]] = entry[1:]
         line = f.readline()
     f.close()
