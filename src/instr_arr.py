@@ -60,7 +60,7 @@ class _I(Instruction):
             instr_map[instr][opcode]
         ])
     
-def _S(Instruction):
+class _S(Instruction):
     def __repr__(self):
         return "S instruction"
     
@@ -221,7 +221,7 @@ def register_map():
     return reg_map
 
 def instruction_map():
-    path = Path(__file__).parent / 'data/instr_map.dat'
+    path = Path(__file__).parent / 'data/instr_data.dat'
     instr_map = {}
     
     f = open(path, 'r')

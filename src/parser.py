@@ -1,4 +1,4 @@
-from src.instr_arr import *
+from instr_arr import *
 from types import FunctionType as function
 from os.path import exists
 
