@@ -201,16 +201,7 @@ class _Pseudo_parse(InstructionParser):
 
 	def organize(self, tokens):
 		instr = tokens[0]
-		if instr == 'nop':
-			rs1, imm, rd = reg_map["x0"], 0, reg_map["x0"]
-			return I("addi", rs1, imm, rd)
-		elif instr == "mv":
-			rs1, imm, rd = reg_map[tokens[2]], 0, reg_map[tokens[1]]
-			return I("addi", rs1, imm, rd)
-		elif instr == "not":
-			rs1, imm, rd = reg_map[tokens[2]], -1, reg_map[tokens[1]]
-			return I("xori", rs1, imm, rd)
-		elif instr == "neg":
+		if instr == "neg":
 			rs1, rs2, rd = reg_map["x0"], reg_map[tokens[2]], reg_map[tokens[1]]
 			return R("sub", rs1, rs2, rd)
 
@@ -281,4 +272,8 @@ S_instr = [
 U_instr = [
     "j", "jal", "jalr",
     "lui", "auipc"
+]
+
+pseudo_instr = [
+    "neg"
 ]
