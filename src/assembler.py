@@ -40,6 +40,7 @@ instruction_encoding = {
     "srl": ("0011100", "001", "0000000"),
     "sla": ("0011100", "010", "0000000"),
     "sra": ("0100000", "101", "0000000"),
+    "lw": ("0000011", "010", "-1"),
     # "addi": ("0000001", "000", "-1"),
     # "subi": ("0000001", "001", "-1"),
     # "muli": ("0000001", "010", "-1"),
@@ -87,7 +88,7 @@ instruction_encoding = {
     # "remi": ("0000001", "101", "-1"),
     # "seqi": ("0000101", "000", "-1"),
     "slti": ("0010011", "010", "-1"),
-    "sltui": ("0010011", "011", "-1"),
+    "sltiu": ("0010011", "011", "-1"),
     # "slei": ("0000101", "010", "-1"),
     # "sleui": ("0001101", "010", "-1"),
     # "sgti": ("0000101", "011", "-1"),
@@ -166,26 +167,26 @@ register_mapping = {
 # Instruction maps
 R_instr = [
     "add", "addu", "sub" , "subu" ,
-    "mul", "mulu", "mulh", "mulhu",
+    "mul", "mulu", "mulh", "mulhu", "mulhsu",
     "div", "divu", "rem" , "remu" ,
     "seq", 
     "slt", "sltu", 
     "sle", "sleu",
     "sge", "sgeu",
     "not", "and" , "or"  , "xor" , "nand",  "nor", "xnor",
-    "sll", "srl"
+    "sll", "srl", "sra"
 ]
 
 I_instr = [
     "addi" ,  "subi",  "muli",  "divi",
     "remi" ,  "seqi",
-    "slti" , "sltui",  "slei", "sleui",
+    "slti" , "sltiu",  "slei", "sleui",
     "sgti" , "sgtui",  "sgei", "sgeui",
     "noti" , 
     "andi" ,   "ori",  "xori",
     "nandi",  "nori", "xnori",
     "slli" ,  "srli", "srai" , 
-    "jalr"
+    "jalr", "lw"
 ]
 
 S_instr = [
@@ -314,7 +315,7 @@ class Assembler:
                 opcode = encoding[0]
                 funct3 = encoding[1]
                 funct7 = encoding[2]
-
+                
                 if mnemonic in R_instr:
                     rd = register_mapping[parts[1]]
                     rs1 = register_mapping[parts[2]]
@@ -323,9 +324,13 @@ class Assembler:
                     print(self.binary_instructions[-1])
                 elif mnemonic in I_instr:
                     rd = register_mapping[parts[1]]
-                    rs1 = register_mapping[parts[2]]
+                    if mnemonic=="lw":
+                        rs1 = register_mapping[parts[2].split("(")[1][:-1]]
+                        imm_val = int(parts[2].split("(")[0])
+                    else:
+                        rs1 = register_mapping[parts[2]]
+                        imm_val = int(parts[3])
                     # immediate value is an int in decimal
-                    imm_val = int(parts[3])
                     if imm_val < 0:
                         imm = format((1 << 12) + imm_val, '012b')
                     else:
@@ -351,7 +356,7 @@ class Assembler:
                         self.binary_instructions.append(f"{imm[5:12]}{rs2}{rs1}{funct3}{imm[:5]}{opcode}")
                         print(self.binary_instructions[-1])
                 elif mnemonic in U_instr:
-                    if mnemonic == "lui":
+                    if mnemonic == "lui" or mnemonic=="auipc":
                         rd = register_mapping[parts[1]]
                         imm = format(int(parts[2]), '020b')
                         self.binary_instructions.append(f"{imm}{rd}{opcode}")

@@ -43,11 +43,11 @@ assembler.print_binary_text_section()
 text_file_path = os.path.join("out", os.path.basename(file_path).replace(".asm", ".bin"))
 
 with open(text_file_path, "w") as text_file:
-    text_file.write("ENTRY 0000\n")
-    text_file.write(".text\n")
+    # text_file.write("ENTRY 0000\n")
+    # text_file.write(".text\n")
     for instruction in assembler.binary_instructions:
         text_file.write(instruction + "\n")
-    text_file.write(".data\n")
-    for data in assembler.binary_data:
-        text_file.write(data + "\n")
+    # text_file.write(".data\n")
+    # for data in assembler.binary_data:
+    #     text_file.write(data + "\n")
 
