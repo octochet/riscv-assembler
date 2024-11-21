@@ -16,9 +16,12 @@ import os
 # Add the parent directory of 'src' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src_v2.assembler import Assembler
+from assembler import Assembler
 
-file_path = "tests/test2.asm"
+#read filname from command line
+file_path = sys.argv[1]
+
+# file_path = "tests/test1.asm"
 with open(file_path, "r") as file:
     asm_code = file.read()
 
@@ -38,7 +41,17 @@ assembler.print_binary_text_section()
 #         # Assuming each instruction is a 32-bit binary string
 #         bin_file.write(int(instruction, 2).to_bytes(4, byteorder='big'))
 
-# text_file_path = "output.txt"
-# with open(text_file_path, "w") as text_file:
-#     for instruction in assembler.binary_instructions:
-#         text_file.write(instruction + "\n")
+# text file output to be same filename but with .txt extension and placed in the out directory
+text_file_path = os.path.join("out", os.path.basename(file_path).replace(".asm", ".bin"))
+
+
+#Print "ENTRY 0000" in the file
+with open(text_file_path, "w") as text_file:
+    text_file.write("ENTRY 0000\n")
+    text_file.write(".text\n")
+    for instruction in assembler.binary_instructions:
+        text_file.write(instruction + "\n")
+    text_file.write(".data\n")
+    for data in assembler.binary_data:
+        text_file.write(data + "\n")
+
