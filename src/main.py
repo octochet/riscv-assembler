@@ -13,15 +13,13 @@ Low Priority TODO:
 import sys
 import os
 
-# Add the parent directory of 'src' to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from assembler import Assembler
 
-#read filname from command line
 file_path = sys.argv[1]
-
 # file_path = "tests/test1.asm"
+
 with open(file_path, "r") as file:
     asm_code = file.read()
 
@@ -44,8 +42,6 @@ assembler.print_binary_text_section()
 # text file output to be same filename but with .txt extension and placed in the out directory
 text_file_path = os.path.join("out", os.path.basename(file_path).replace(".asm", ".bin"))
 
-
-#Print "ENTRY 0000" in the file
 with open(text_file_path, "w") as text_file:
     text_file.write("ENTRY 0000\n")
     text_file.write(".text\n")
